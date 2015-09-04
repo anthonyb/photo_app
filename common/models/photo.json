@@ -1,0 +1,27 @@
+{
+  "name": "Photo",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "properties": {
+    "image_url": {
+      "type": "string",
+      "required": true
+    },
+    "user_id": {
+      "type": "string"
+    },
+    "group_id": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    },
+    "views": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "methods": []
+}

@@ -1,0 +1,15 @@
+{
+  "db": {
+  "name": "db",
+  "connector": "memory",
+  "file": "./server/db.json"
+  },
+  "mongodb": {
+    "host": "localhost",
+    "database": "photo_app",
+    "username": "",
+    "password": "",
+    "name": "mongodb",
+    "connector": "mongodb"
+  }
+}

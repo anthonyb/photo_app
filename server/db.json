@@ -1,0 +1,25 @@
+{
+  "ids": {
+    "User": 1,
+    "Photo": 7,
+    "AccessToken": 1,
+    "ACL": 1,
+    "RoleMapping": 1,
+    "Role": 1
+  },
+  "models": {
+    "User": {},
+    "Photo": {
+      "1": "{\"image_url\":\"test\",\"user_id\":\"\",\"group_id\":\"\",\"password\":\"\",\"views\":7,\"id\":1}",
+      "2": "{\"image_url\":\"sadfsad\",\"user_id\":\"\",\"group_id\":\"\",\"password\":\"\",\"views\":0,\"id\":2}",
+      "3": "{\"image_url\":\"sadad\",\"user_id\":\"\",\"group_id\":\"\",\"password\":\"\",\"views\":0,\"id\":3}",
+      "4": "{\"image_url\":\"xyz\",\"views\":0,\"id\":4}",
+      "5": "{\"image_url\":\"xyz\",\"views\":0,\"id\":5}",
+      "6": "{\"image_url\":\"test1\",\"group_id\":\"5\",\"views\":0,\"id\":6}"
+    },
+    "AccessToken": {},
+    "ACL": {},
+    "RoleMapping": {},
+    "Role": {}
+  }
+}
