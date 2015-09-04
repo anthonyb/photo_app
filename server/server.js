@@ -1,11 +1,15 @@
 var loopback = require('loopback');
 var boot = require('loopback-boot');
 var bodyParser = require('body-parser');
+var path = require('path');
 
 var app = module.exports = loopback();
+var server = require('http').createServer(app);
 
 app.middleware('initial', bodyParser.urlencoded({ extended: true }));
 app.middleware('initial', bodyParser.json());
+
+app.use(loopback.static(path.resolve(__dirname, '../client')));
 
 app.start = function() {
   // start the web server
@@ -22,6 +26,10 @@ app.post("/upload", function (req, res) {
     } else {
       res.status(200);
       res.send(photo);
+
+      app.models.Photo.find(null,function(err, photos){
+        app.io.emit('create', photos);
+      })
     }
   })
 });
@@ -32,6 +40,8 @@ app.get("/list", function (req, res) {
     res.send(photos);
   })
 });
+
+
 
 app.get("/view/:id", function (req, res) {
   var id = req.params['id'];
@@ -54,6 +64,14 @@ boot(app, __dirname, function(err) {
   if (err) throw err;
 
   // start the server if `$ node server.js`
-  if (require.main === module)
-    app.start();
+  if (require.main === module){
+    app.io = require('socket.io')(app.start());
+    app.io.on('connection', function (socket) {
+      console.log('a user connected');
+      socket.on('disconnect', function(){
+        console.log('user disconnected');
+      });
+    });
+  }
+
 });
