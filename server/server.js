@@ -9,7 +9,8 @@ var server = require('http').createServer(app);
 app.middleware('initial', bodyParser.urlencoded({ extended: true }));
 app.middleware('initial', bodyParser.json());
 
-app.use(loopback.static(path.resolve(__dirname, '../client')));
+app.set('view engine', 'ejs');
+app.set('views', path.resolve(__dirname, 'views'));
 
 app.start = function() {
   // start the web server
@@ -27,21 +28,11 @@ app.post("/upload", function (req, res) {
       res.status(200);
       res.send(photo);
 
-      app.models.Photo.find(null,function(err, photos){
-        app.io.emit('create', photos);
-      })
+      emit_photos(photo.group_id)
+      emit_photos()
     }
   })
 });
-
-app.get("/list", function (req, res) {
-  app.models.Photo.find(null,function(err, photos){
-    res.status(200);
-    res.send(photos);
-  })
-});
-
-
 
 app.get("/view/:id", function (req, res) {
   var id = req.params['id'];
@@ -58,6 +49,19 @@ app.get("/view/:id", function (req, res) {
   })
 });
 
+emit_photos = function(group_id){
+  var channel = 'create'
+  if(group_id){
+    criteria = {where:{group_id:group_id}}
+    channel = 'create'+group_id
+  }else{
+    criteria = null
+  }
+  app.models.Photo.find(criteria,function(err, photos){
+    app.io.emit(channel, photos);
+  })
+}
+
 // Bootstrap the application, configure models, datasources and middleware.
 // Sub-apps like REST API are mounted via boot scripts.
 boot(app, __dirname, function(err) {
@@ -67,7 +71,9 @@ boot(app, __dirname, function(err) {
   if (require.main === module){
     app.io = require('socket.io')(app.start());
     app.io.on('connection', function (socket) {
-      console.log('a user connected');
+      socket.on('listen', function(obj){
+        emit_photos(obj.group_id)
+      });
       socket.on('disconnect', function(){
         console.log('user disconnected');
       });
