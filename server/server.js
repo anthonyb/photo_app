@@ -40,7 +40,6 @@ app.get("/view/:id", function (req, res) {
     if(err) {
       res.status(404).send('Not found');
     } else {
-      console.log(photo)
       photo.views++
       photo.save()
       res.status(200);
