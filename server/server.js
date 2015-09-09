@@ -26,8 +26,6 @@ app.post("/upload/:id?", function (req, res) {
       res.send("error::" +err)
     } else {
 
-      console.log(photo)
-
       res.status(200);
       res.send(photo);
 
