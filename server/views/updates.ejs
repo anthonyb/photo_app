@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+  <script>
+    var socket = io.connect('<%- server %>');
+    socket.emit('listen', { group_id: 'updates' %> });
+    socket.on('updates', function (data) {
+      document.getElementById('data').innerHTML = JSON.stringify(data)
+    });
+  </script>
+</head>
+<body>
+  <div id="data"></div>
+</body>
+</html>

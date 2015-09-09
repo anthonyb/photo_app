@@ -20,15 +20,19 @@ app.start = function() {
   });
 };
 
-app.post("/upload", function (req, res) {
-  app.models.Photo.create(req.body,function(err, photo){
+app.post("/upload/:id?", function (req, res) {
+  app.models.Photo.upsert(req.body,function(err, photo){
     if(err) {
       res.send("error::" +err)
     } else {
+
+      console.log(photo)
+
       res.status(200);
       res.send(photo);
 
       emit_photos(photo.group_id)
+      emit_photos("updates")
       emit_photos()
     }
   })
@@ -42,6 +46,7 @@ app.get("/view/:id", function (req, res) {
     } else {
       photo.views++
       photo.save()
+      emit_photos("updates")
       res.status(200);
       res.send(photo);
     }
@@ -50,7 +55,10 @@ app.get("/view/:id", function (req, res) {
 
 emit_photos = function(group_id){
   var channel = 'create'
-  if(group_id){
+  if(group_id == "updates"){
+    criteria = {where:{updated:true}}
+    channel = 'updates'
+  }else if(group_id){
     criteria = {where:{group_id:group_id}}
     channel = 'create'+group_id
   }else{
